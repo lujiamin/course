@@ -51,6 +51,11 @@ public class Analyse {
 				}
 			} else if (c[i] >= '0' && c[i] <= '9') { // number
 				tmp += c[i];
+				// the dot of number
+				if(c[i+1]=='.'){
+					tmp+=c[i+1];
+					i++;
+				}
 				if (c[i + 1] < '0' || c[i + 1] > '9') {
 					list.add(tmp);
 					flag.add(3);
