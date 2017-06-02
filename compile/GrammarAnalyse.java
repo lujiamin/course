@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Stack;
 
 public class GrammarAnalyse {
 
@@ -12,6 +13,7 @@ public class GrammarAnalyse {
 
 	public static void main(String[] args) {
 		System.out.println("the raw rules:");
+		// 打印原始文法
 		for (String s : arrRaw) {
 			System.out.println(s);
 		}
@@ -29,10 +31,17 @@ public class GrammarAnalyse {
 		System.out.println("the map of firsts:");
 		System.out.println(getFirsts(arrC));
 		System.out.println();
-		System.out.println("the map of follows");
+		System.out.println("the map of follows:");
 		System.out.println(getFollows(arrC));
-		System.out.println("**************************************************");
-		analyseTable(arrC);
+		System.out.println();
+		System.out.println("the analyseTable of LL(1):");
+		HashMap<Character, HashMap<Character, String>> mapTable = analyseTable(arrC);
+		printAnalyseTable(mapTable);
+		System.out.println();
+		// the string to analyze
+		String test = "i+i*i";
+		System.out.println("the analyse of string " + test);
+		analyseString(arrC, test);
 	}
 
 	// 拆分规则
@@ -58,7 +67,6 @@ public class GrammarAnalyse {
 			setLeft.add(item.charAt(0));
 		}
 		return setLeft;
-
 	}
 
 	// 获取终结符
@@ -231,7 +239,6 @@ public class GrammarAnalyse {
 						setFollows.addAll(firsts.get(s.charAt(chIndex + 1)));
 					}
 				}
-
 			}
 			if (follows.containsKey(ch)) {
 				setFollows.addAll(follows.get(ch));
@@ -255,7 +262,6 @@ public class GrammarAnalyse {
 						}
 						follows.put(s.charAt(s.length() - 1), setFollows);
 					}
-
 				}
 			}
 			// System.out.println(follows);
@@ -280,10 +286,10 @@ public class GrammarAnalyse {
 			i++;
 		}
 		return follows;
-
 	}
 
-	public static void analyseTable(String[] arr) {
+	// 求LL(1)分析表
+	public static HashMap<Character, HashMap<Character, String>> analyseTable(String[] arr) {
 		HashMap<Character, HashSet<Character>> firsts = new HashMap<>();
 		HashMap<Character, HashSet<Character>> follows = new HashMap<>();
 		HashSet<Character> Telem = new HashSet<>();
@@ -299,8 +305,8 @@ public class GrammarAnalyse {
 
 		Telem.add('#');
 		Telem.remove('$');
-		System.out.println(Telem);
-		System.out.println(Nelem);
+		// System.out.println(Telem);
+		// System.out.println(Nelem);
 		for (Character N : Nelem) {
 			for (Character T : Telem) {
 				// System.out.println(T);
@@ -330,8 +336,92 @@ public class GrammarAnalyse {
 				}
 			}
 		}
-		System.out.println(mapTable);
+		return mapTable;
+	}
 
+	// 打印LL(1)分析表
+	public static void printAnalyseTable(HashMap<Character, HashMap<Character, String>> mapTable) {
+		for (Character N : mapTable.keySet()) {
+			System.out.printf("%-10s", N);
+			for (Character T : mapTable.get(N).keySet()) {
+				System.out.printf("%-15s", T + ":  " + N + "->" + mapTable.get(N).get(T) + "    ");
+			}
+			System.out.println();
+		}
+	}
+
+	// 分析输入的字符串
+	public static void analyseString(String[] arr, String string) {
+		HashMap<Character, HashMap<Character, String>> mapTable = analyseTable(arr);
+		mapTable = analyseTable(arr);
+		// 输入串
+		Stack<Character> stackString = new Stack<Character>();
+		// 分析栈
+		Stack<Character> stackAnalyse = new Stack<Character>();
+		stackAnalyse.push('#');
+		stackAnalyse.push(arrRaw[0].charAt(0));
+		stackString.push('#');
+		for (int i = string.length() - 1; i >= 0; i--) {
+			stackString.push(string.charAt(i));
+		}
+		boolean flag = true;
+		while (true) {
+			if (stackAnalyse.peek() == '$') {
+				System.out.printf("%-50s", stackAnalyse);
+				System.out.printf("%-50s", StackReverse(stackString));
+				System.out.println();
+				stackAnalyse.pop();
+				continue;
+			}
+			// 匹配成功退出
+			if (stackAnalyse.peek() == '#' && stackString.peek() == '#') {
+				System.out.printf("%-50s", stackAnalyse);
+				System.out.printf("%-50s", StackReverse(stackString));
+				System.out.println();
+				break;
+			}
+			if (stackAnalyse.peek() == stackString.peek()) {
+				System.out.printf("%-50s", stackAnalyse);
+				System.out.printf("%-50s", StackReverse(stackString));
+				System.out.println();
+				stackAnalyse.pop();
+				stackString.pop();
+				continue;
+			}
+			// 匹配失败退出
+			if (!mapTable.get(stackAnalyse.peek()).keySet().contains(stackString.peek())) {
+				flag = false;
+				break;
+			} else {
+				String tmp = mapTable.get(stackAnalyse.peek()).get(stackString.peek());
+				char N = stackAnalyse.peek();
+				System.out.printf("%-50s", stackAnalyse.toString());
+				System.out.printf("%-50s", StackReverse(stackString));
+				System.out.printf("%-50s", N + "->" + tmp);
+				System.out.println();
+				stackAnalyse.pop();
+				for (int i = tmp.length() - 1; i >= 0; i--) {
+					stackAnalyse.push(tmp.charAt(i));
+				}
+				continue;
+			}
+		}
+		if (flag == false) {
+			System.out.println("error");
+		} else {
+			System.out.println("success");
+		}
+	}
+
+	// 为了配合剩余输入串的顺序，将stack化为字符串转置
+	public static String StackReverse(Stack<Character> st) {
+		String result = st.toString();
+		String tmp = "[";
+		for (int i = result.length() - 2; i > 0; i--) {
+			tmp += result.charAt(i);
+		}
+		tmp += "]";
+		return tmp;
 	}
 
 }
