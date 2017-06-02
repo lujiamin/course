@@ -8,11 +8,7 @@ import java.util.HashSet;
 public class GrammarAnalyse {
 
 	// 假定用 $ 符号代表空 ε
-	private static String[] arrRaw = { "E->E+T|T", "T->T*F|F", "F->(E)|i" };// "E->TA",
-																			// "A->+TA|$",
-																			// "T->FB",
-																			// "B->*FB|$",
-																			// "F->(E)|i"
+	private static String[] arrRaw = { "E->E+T|T", "T->T*F|F", "F->(E)|i" };
 
 	public static void main(String[] args) {
 		System.out.println("the raw rules:");
@@ -190,6 +186,12 @@ public class GrammarAnalyse {
 			}
 			firsts.put(ch, setFirsts);
 		}
+		// 给出终结符的firsts集
+		for (Character ch : getTelements(arr)) {
+			HashSet<Character> tmp = new HashSet<>();
+			tmp.add(ch);
+			firsts.put(ch, tmp);
+		}
 		return firsts;
 	}
 
@@ -286,12 +288,49 @@ public class GrammarAnalyse {
 		HashMap<Character, HashSet<Character>> follows = new HashMap<>();
 		HashSet<Character> Telem = new HashSet<>();
 		HashSet<Character> Nelem = new HashSet<>();
+		HashMap<Character, ArrayList<String>> mapRules = new HashMap<>();
+		HashMap<Character, HashMap<Character, String>> mapTable = new HashMap<>();
+
 		firsts = getFirsts(arr);
 		follows = getFollows(arr);
 		Telem = getTelements(arr);
 		Nelem = getNelements(arr);
+		mapRules = splitRules(arr);
+
+		Telem.add('#');
+		Telem.remove('$');
 		System.out.println(Telem);
 		System.out.println(Nelem);
+		for (Character N : Nelem) {
+			for (Character T : Telem) {
+				// System.out.println(T);
+				HashMap<Character, String> tmp = new HashMap<>();
+				for (String s : mapRules.get(N)) {
+					// 规则中不存在空串
+					if (!firsts.get(s.charAt(0)).contains('$')) {
+						if (firsts.get(s.charAt(0)).contains(T)) {
+							tmp.put(T, s);
+							if (mapTable.keySet().contains(N)) {
+								tmp.putAll(mapTable.get(N));
+							}
+							mapTable.put(N, tmp);
+						}
+					}
+					// 如果存在空串
+					if (firsts.get(s.charAt(0)).contains('$')) {
+						// 将所有follows集中的终结符,对应的分析表中的位置填入规则
+						for (Character follow : follows.get(N)) {
+							tmp.put(follow, s);
+							if (mapTable.keySet().contains(N)) {
+								tmp.putAll(mapTable.get(N));
+							}
+							mapTable.put(N, tmp);
+						}
+					}
+				}
+			}
+		}
+		System.out.println(mapTable);
 
 	}
 
