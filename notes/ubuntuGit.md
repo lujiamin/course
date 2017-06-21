@@ -13,9 +13,7 @@ git config --global user.email 'xx@xx'
 ssh-keygen -C 'xx@xx' -t rsa
 ```
 - upload ssh key
-```
-copy the content in ~/.ssh/id_rsa.pub
-```
+  - copy the content in ~/.ssh/id_rsa.pub
 - test
 ```
 ssh -v git@github.com
