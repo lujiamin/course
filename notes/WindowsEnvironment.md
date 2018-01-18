@@ -1,12 +1,15 @@
 ## Environments
 - jdk
+- maven
 - tomcat
+- nginx
 - MySQL
 - mongoDB
 - redis
 - python3
 - node.js
 - Git
+- docker
 
 ## Tools
 - IntelliJ IDEA
@@ -14,7 +17,7 @@
 - Eclipse
 - Sublime Text
 - VS Code
-- VMware
+- VMware(CentOS)
 - Postman
 
 ## Softwares
@@ -22,3 +25,4 @@
 - Chrome
 - Offices
 - MatLab
+- Sogou input 
