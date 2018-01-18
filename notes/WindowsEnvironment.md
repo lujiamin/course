@@ -15,6 +15,7 @@
 - IntelliJ IDEA
 - PyCharm
 - Eclipse
+- CodeBlocks
 - Sublime Text
 - VS Code
 - VMware(CentOS)
@@ -26,3 +27,11 @@
 - Offices
 - MatLab
 - Sogou input 
+
+## Others
+- About python  
+  - pip,numpy,tensorflow,keras...
+  - flask,django,cherrypy...
+- About node  
+  - vue.js
+- 
