@@ -27,6 +27,7 @@
 - Offices
 - MatLab
 - Sogou input 
+- f.lux
 
 ## Others
 - About python  
