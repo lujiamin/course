@@ -50,7 +50,7 @@
   sqlSessionFactory.openSession(ExecutorType.BATCH);
   ```
   - 一旦使用了批量执行器，在默认情况下在commit后才方法送SQL到数据库
-    - settings是MyBatis中最复杂的配置，它会改变MyBatis运行时的行为，作用十分必要
+  - settings是MyBatis中最复杂的配置，它会改变MyBatis运行时的行为，作用十分必要
 - java设计模式？适配器模式？(详细研究常见设计模式)
   - 单例模式
   - 工厂模式
