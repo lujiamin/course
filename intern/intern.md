@@ -248,3 +248,13 @@ public class HelloController{
     }
 }
 ```
+### March 6th
+#### Spring MVC常用注解
+- @Controller——注解在类上，将其声明为Spring的Bean
+- @RequestMapping——用来映射web请求，可以注解在类和方法上
+- @ResponseBody——支持将返回值放在response体内
+- @RequestBody——允许request的参数在request的体内
+- @PathVariable——用来接收路径参数
+- @RestController——是一个组合注解，组合了@Controller和@ResponseBody
+
+### the end
