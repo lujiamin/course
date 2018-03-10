@@ -34,4 +34,79 @@
   - 哈夫曼编码——通过变长编码的方式对数据进行编码，通过权值的评估。
   - 香浓-范诺编码——按符号出现的概率由大到小进行排列，将其分为两组，使其概率之和尽可能相等，约定左边为0，右边为1，再对每组进行上述迭代，直至每组只剩一个数据
   - 哈夫曼编码的优势较为明显，香浓-范诺编码产生的并不是最优前缀码
-#### chapter 2 数据查找与资源分配算法      
+#### chapter 2 数据查找与资源分配算法
+- 数值查找算法
+  - 二分搜索算法
+  - 分块搜索算法
+  - 哈希查找算法——哈希函数和哈希表的结构
+- 字符串查找算法
+  - KMP算法
+  - Boyer-Moore算法
+  - Sunday算法
+- 海量数据的查找
+  - 基于布隆过滤器查找
+  - 倒排索引查找
+- 银行家算法
+- 背包问题
+  - 0-1背包问题——动态规划问题
+  ```
+  // 0-1背包问题。weight[]表示物品的重量，value[]表示物品的价值，totalWeight表示背包的总容量。数组下标从1开始
+    public static int getMostValue(int weight[], int[] value, int totalWeight) {
+        int num = weight.length - 1;// num个物品
+        int dp[] = new int[totalWeight + 1];
+        for (int i = 1; i <= num; i++) {
+            for (int j = totalWeight; j >= 1; j--) {
+                if (weight[i] <= j) {
+                    dp[j] = (dp[j] < dp[j - weight[i]] + value[i]) ? dp[j - weight[i]] + value[i] : dp[j];
+                }
+            }
+        }
+        return dp[totalWeight];
+    }
+  ```
+  - 部分背包问题——贪婪算法 
+#### chapter 3 路径分析算法
+- 基于Dijkstra算法的路径分析——用于计算一个点到其他所有节点的最短路径
+- 基于Floyd算法的路径分析——多源点之间的最短路径
+- 基于维比特算法的概率路径——应用于中文分词，天气预测等
+- 最长公共子串(需连续)
+```
+// 返回最长公共子串的长度
+    public static int maxLength(String a, String b) {
+        int m = a.length();
+        int n = b.length();
+        int dp[][] = new int[m + 1][n + 1];
+        int ans = 0;
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                // 等于左上角的值加1
+                if (a.charAt(i - 1) == b.charAt(j - 1))
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                if (dp[i][j] > ans) {
+                    ans = dp[i][j];
+                }
+            }
+        }
+        return ans;
+    }
+```
+- 最长公共子序列问题(通过回溯法将序列输出)
+```
+// 求最长公共子序列的长度
+    public static int maxLength(String a, String b) {
+        int m = a.length();
+        int n = b.length();
+        int dp[][] = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (a.charAt(i - 1) == b.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+```
