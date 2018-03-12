@@ -49,7 +49,7 @@
 - 银行家算法
 - 背包问题
   - 0-1背包问题——动态规划问题
-  ```
+  ```java
   // 0-1背包问题。weight[]表示物品的重量，value[]表示物品的价值，totalWeight表示背包的总容量。数组下标从1开始
     public static int getMostValue(int weight[], int[] value, int totalWeight) {
         int num = weight.length - 1;// num个物品
@@ -90,9 +90,9 @@
         }
         return ans;
     }
-```java
-- 最长公共子序列问题(通过回溯法将序列输出)
 ```
+- 最长公共子序列问题(通过回溯法将序列输出)
+```java
 // 求最长公共子序列，mark[][]为标记数组
     public static int maxLength(String a, String b, int mark[][]) {
         int m = a.length();
