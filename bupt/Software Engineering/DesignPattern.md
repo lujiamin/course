@@ -46,7 +46,7 @@
   }
   ```
 - 单例模式——只有一个实例
-```
+```java
 public class Test{
     // 构造函数私有
     private Test(){
